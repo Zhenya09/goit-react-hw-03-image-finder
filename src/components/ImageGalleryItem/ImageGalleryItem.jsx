@@ -20,6 +20,20 @@ export const ImageGalleryItem = ({ images, togleModal }) => {
   );
 };
 
+
+
 ImageGalleryItem.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.object).isRequired, 
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      webformatURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  togleModal: PropTypes.func.isRequired,
 };
+
+
+
+

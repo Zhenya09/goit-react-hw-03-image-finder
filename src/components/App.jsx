@@ -35,13 +35,13 @@ export class App extends Component {
     getSearch(text, page)
       .then(resp => resp.json()) 
       .then(data => {
-
         if (data.hits.length === 0) {
           this.setState({ empty: true }); 
         }
         this.setState(prevSt => ({
           page: prevSt.page,
           images: [...prevSt.images, ...data.hits], 
+          total: data.totalHits
         }));
       })
       .catch(error => {
@@ -89,7 +89,6 @@ export class App extends Component {
     const { error, loading, images, total, page } = this.state;
     return (
       <div>
-
         <Toaster
           toastOptions={{
             duration: 1500,
@@ -116,13 +115,17 @@ export class App extends Component {
 
         {total / 12 > page && <Button clickLoad={this.clickLoad} />}
 
-        {this.state.showModal && (
+        {this.state.showModal &&  (
           <Modal closeModal={this.closeModal}>
             <img src={this.state.largeImageURL} alt={this.state.alt} />
           </Modal>
+        
         )}
       </div>
     );
   }
 }
+
+
+
 
