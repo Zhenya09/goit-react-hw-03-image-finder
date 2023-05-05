@@ -1,10 +1,10 @@
 import { Component } from 'react';
-import { Toaster } from 'react-hot-toast'; 
+import { Toaster } from 'react-hot-toast';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import { getSearch } from 'api/getSearch'; 
-import { Searchbar } from './Searchbar/Searchbar'; 
+import { getSearch } from 'api/getSearch';
+import { Searchbar } from './Searchbar/Searchbar';
 import { Button } from 'components/Button/Button';
-import { Loader } from 'components/Loader/Loader'; 
+import { Loader } from 'components/Loader/Loader';
 import { Modal } from './Modal/Modal';
 
 export class App extends Component {
@@ -13,10 +13,12 @@ export class App extends Component {
     images: [],
     page: 1,
     total: 1,
-    loading: false, 
+    loading: false,
     error: null,
     showModal: false,
-    empty: false, 
+    largeImageURL: '',
+    alt: '',
+    empty: false,
   };
 
   componentDidUpdate(_, PrevState) {
@@ -30,17 +32,17 @@ export class App extends Component {
   }
 
   getFunc = (text, page) => {
-    this.setState({ loading: true }); 
+    this.setState({ loading: true });
 
     getSearch(text, page)
-      .then(resp => resp.json()) 
+      .then(resp => resp.json())
       .then(data => {
         if (data.hits.length === 0) {
-          this.setState({ empty: true }); 
+          this.setState({ empty: true });
         }
         this.setState(prevSt => ({
           page: prevSt.page,
-          images: [...prevSt.images, ...data.hits], 
+          images: [...prevSt.images, ...data.hits],
           total: data.totalHits
         }));
       })
@@ -48,18 +50,17 @@ export class App extends Component {
         this.setState({ error: error.message });
       })
       .finally(() => {
-        this.setState({ loading: false }); 
+        this.setState({ loading: false });
       });
   };
 
   clickLoad = () => {
     this.setState(prevSt => ({
-      page: prevSt.page + 1, 
+      page: prevSt.page + 1,
     }));
   };
 
   openModal = (largeImageURL, alt) => {
-
     this.setState(({ showModal }) => {
       return { showModal: !showModal, largeImageURL, alt };
     });
@@ -80,9 +81,14 @@ export class App extends Component {
 
   closeModal = () => {
 
-    this.setState(({ showModal }) => {
-      return { showModal: !showModal };
+    this.setState(({ showModal, largeImageURL, alt }) => {
+      return {
+        showModal: !showModal,
+        largeImageURL: "",
+        alt: ""
+      };
     });
+    
   };
 
   render() {
@@ -125,7 +131,3 @@ export class App extends Component {
     );
   }
 }
-
-
-
-
